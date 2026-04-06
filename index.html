@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="塔羅秘境">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0a0612">
+
+
+
+
+
 <title>塔羅秘境 · Arcana v3</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
@@ -549,6 +549,27 @@ border-radius:10px;margin:10px 0 0;border:1px solid;animation:fadeUp .4s ease;cu
 margin-top:5px;cursor:pointer;text-decoration:underline;display:inline-block;}
 .dn-override:hover{opacity:.85;}
 
+/* ── AI RESPONSE ── */
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);
+  animation:aiDotPulse 1.4s ease-in-out infinite;}
+.ai-dot:nth-child(2){animation-delay:.2s;}
+.ai-dot:nth-child(3){animation-delay:.4s;}
+@keyframes aiDotPulse{0%,80%,100%{transform:scale(.6);opacity:.3}40%{transform:scale(1);opacity:1}}
+.ai-response{animation:fadeUp .4s ease;}
+.ai-resp-header{text-align:center;margin-bottom:14px;padding-bottom:10px;
+  border-bottom:1px solid rgba(201,168,76,.15);}
+.ai-resp-body{font-size:15px;line-height:1.95;color:var(--cream);opacity:.88;}
+.ai-resp-body p{margin:0 0 12px;}
+.ai-resp-body strong{color:var(--gold-light);}
+.ai-resp-body em{color:var(--silver);font-style:italic;}
+.ai-heading{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);margin:16px 0 6px;text-transform:uppercase;}
+.ai-point{display:flex;gap:8px;margin:8px 0;align-items:flex-start;}
+.ai-num{font-family:'Georgia',serif;font-size:13px;font-weight:700;
+  color:var(--gold);opacity:.7;min-width:18px;flex-shrink:0;margin-top:1px;}
+.ai-resp-footer{display:flex;justify-content:space-between;align-items:center;
+  margin-top:16px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);}
+
 /* ── DEEP ANALYSIS REPORT ── */
 .deep-report{background:linear-gradient(135deg,rgba(10,6,18,.97),rgba(20,10,40,.9));
 border:1px solid rgba(201,168,76,.3);border-radius:14px;padding:24px;margin:14px 0;
@@ -590,22 +611,18 @@ border:1px solid rgba(201,168,76,.22);border-radius:10px;padding:16px 18px;margi
 color:var(--gold);opacity:.55;margin-bottom:8px;}
 .oracle-txt{font-size:15px;line-height:1.88;color:var(--cream);opacity:.88;font-style:italic;}
 </style>
-  <!-- ═══ PWA META ═══ -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="塔羅秘境">
-  <meta name="application-name" content="塔羅秘境 ARCANA">
-  <meta name="theme-color" content="#c9a84c">
-  <meta name="msapplication-TileColor" content="#0a0612">
-  <!-- Apple Touch Icons -->
-  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
-  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+
+<!-- PWA Meta — auto-injected by PWA 打包神器 -->
+<meta name="application-name" content="AI易經塔羅">
+<meta name="description" content="">
+<meta name="theme-color" content="#1a73e8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="AI易經塔羅">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){console.log('[SW] registered:',r.scope)}).catch(function(e){console.warn('[SW] failed:',e)});});}</script>
 </head>
 <body>
 <div class="stars"></div>
@@ -765,11 +782,12 @@ color:var(--gold);opacity:.55;margin-bottom:8px;}
       <div id="dailyActions" style="display:none;">
         <div class="action-bar">
           <button class="ai-btn" id="dAIBtn" onclick="getAI('daily')">✦ 深度分析</button>
+          <button class="btn-s" onclick="showWorkerSetup('daily')" title="設定 API Key">⚙</button>
           <button class="btn-s" onclick="openSaveModal('daily')">儲存至日誌</button>
           <button class="btn-s" onclick="resetDaily()">重新抽牌</button>
         </div>
         <div class="air" id="dailyAIR">
-          <div class="air-lbl">✦ 深度分析 · 五行元素解讀 ✦</div>
+          <div class="air-lbl">✦ Claude AI · 深度解讀 ✦</div>
           <div id="dAITxt"></div>
           <div class="speech-bar" id="dSpeechBar" style="display:none;">
             <div class="speech-wave">
@@ -875,11 +893,12 @@ color:var(--gold);opacity:.55;margin-bottom:8px;}
       <div id="spreadInterpArea"></div>
       <div class="action-bar" style="margin-top:18px;">
         <button class="ai-btn" id="sAIBtn" onclick="getAI('spread')">✦ 深度分析</button>
+        <button class="btn-s" onclick="showWorkerSetup('spread')" title="設定 API Key">⚙</button>
         <button class="btn-s" onclick="openSaveModal('spread')">儲存至日誌</button>
         <button class="btn-s" onclick="resetSpread()">重新占卜</button>
       </div>
       <div class="air" id="spreadAIR">
-        <div class="air-lbl">✦ 深度分析 · 五行牌陣解讀 ✦</div>
+        <div class="air-lbl">✦ Claude AI · 深度解讀 ✦</div>
         <div id="sAITxt"></div>
         <div class="speech-bar" id="sSpeechBar" style="display:none;">
           <div class="speech-wave">
@@ -3249,7 +3268,89 @@ function resetSpread() {
 const EL_TO_CAT = { '火':'spiritual','水':'love','土':'health','風':'spiritual' };
 const EL_TO_SUIT = { '火':'wands','水':'cups','土':'pentacles','風':'swords' };
 
-function getAI(type) {
+// ═══════════════════════════════════════════════════════════════
+// API KEY 設定（直接呼叫 Anthropic，存於 localStorage）
+// ═══════════════════════════════════════════════════════════════
+let ANTHROPIC_API_KEY = localStorage.getItem('tarot_api_key') || '';
+
+function setApiKey(key) {
+  ANTHROPIC_API_KEY = key.trim();
+  localStorage.setItem('tarot_api_key', ANTHROPIC_API_KEY);
+}
+
+// ── API Key 設定浮層 ───────────────────────────────────────────
+function showWorkerSetup(callbackType) {
+  const existing = document.getElementById('workerSetupModal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'workerSetupModal';
+  modal.style.cssText = `
+    position:fixed;inset:0;z-index:9999;
+    background:rgba(0,0,0,.85);backdrop-filter:blur(8px);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  `;
+  modal.innerHTML = `
+    <div style="background:linear-gradient(135deg,#1a0a2e,#0f0820);
+      border:1px solid rgba(201,168,76,.4);border-radius:16px;
+      padding:28px;max-width:420px;width:100%;">
+      <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.3em;
+        color:var(--gold);opacity:.7;margin-bottom:8px;">AI 深度分析設定</div>
+      <div style="font-size:15px;color:var(--cream);font-weight:600;margin-bottom:16px;">
+        🔮 輸入 Anthropic API Key
+      </div>
+      <div style="font-size:12.5px;color:var(--silver);opacity:.7;line-height:1.8;margin-bottom:16px;">
+        請到 <strong style="color:var(--gold);">console.anthropic.com</strong> → API Keys 取得。<br>
+        格式：<code style="color:var(--gold);">sk-ant-...</code><br>
+        Key 只存在你的裝置本地，不會上傳任何地方。
+      </div>
+      <input id="apiKeyInput" type="text"
+        placeholder="sk-ant-api03-..."
+        value="${ANTHROPIC_API_KEY}"
+        style="width:100%;box-sizing:border-box;
+          background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);
+          border-radius:8px;padding:11px 14px;font-size:12px;color:var(--cream);
+          font-family:'Crimson Pro',serif;outline:none;margin-bottom:14px;"
+      />
+      <div style="display:flex;gap:10px;">
+        <button onclick="
+          const key=document.getElementById('apiKeyInput').value.trim();
+          if(!key){ alert('請輸入 API Key'); return; }
+          setApiKey(key);
+          document.getElementById('workerSetupModal').remove();
+          getAI('${callbackType}');
+        " style="flex:1;padding:11px;background:rgba(201,168,76,.15);
+          border:1px solid rgba(201,168,76,.45);border-radius:8px;
+          color:var(--gold);font-family:'Cinzel',serif;font-size:11px;
+          letter-spacing:.15em;cursor:pointer;">
+          確認並分析
+        </button>
+        <button onclick="document.getElementById('workerSetupModal').remove();"
+          style="padding:11px 18px;background:none;border:1px solid rgba(255,255,255,.1);
+            border-radius:8px;color:var(--silver);font-size:12px;cursor:pointer;opacity:.6;">
+          取消
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  setTimeout(() => document.getElementById('apiKeyInput').focus(), 100);
+}
+function renderMarkdown(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^#{1,3}\s+(.+)$/gm, '<div class="ai-heading">$1</div>')
+    .replace(/^(\d+)\.\s+\*\*(.+?)\*\*：?/gm, '<div class="ai-point"><span class="ai-num">$1</span><strong>$2</strong></div>')
+    .replace(/^(\d+)\.\s+/gm, '<div class="ai-point"><span class="ai-num">$1</span>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+}
+
+
+
+// ── 主要 AI 呼叫函式 ──────────────────────────────────────────
+async function getAI(type) {
   const btnId = type==='daily' ? 'dAIBtn' : 'sAIBtn';
   const airId = type==='daily' ? 'dailyAIR' : 'spreadAIR';
   const txtId = type==='daily' ? 'dAITxt' : 'sAITxt';
@@ -3257,43 +3358,125 @@ function getAI(type) {
   const air   = document.getElementById(airId);
   const txt   = document.getElementById(txtId);
 
-  if(btn.disabled) return;
+  if (btn.disabled) return;
 
-  if(type === 'daily') {
-    // ── 每日一牌：生成單牌深度解析面板 ──────────────────
-    const c = S.dailyCard;
-    if(!c) return;
+  // 確認有牌
+  if (type === 'daily' && !S.dailyCard) return;
+  if (type === 'spread' && (!S.spreadCards || !S.spreadCards.length)) return;
 
-    // 決定牌的主要元素對應類別
-    const autoSuit  = EL_TO_SUIT[c.el] || c.type;
-    const autoCards = [c];
-
-    // 建立單牌五行報告
-    const fiveEl    = new FiveElementAnalyzer(autoCards, 'general');
-    const cardReport = buildDailyDeepHTML(c);
-
-    txt.innerHTML = cardReport;
-    air.classList.add('show');
-
-  } else {
-    // ── 牌陣：從已渲染的 spreadDeepArea 取出並展示 ──────
-    const cards   = S.spreadCards;
-    if(!cards || !cards.length) return;
-    const catKey  = S.selectedCategory || 'general';
-    const fiveEl  = new FiveElementAnalyzer(cards, catKey);
-    const deepHTML= fiveEl.generateDeepHTML();
-
-    if(!deepHTML) {
-      // 中性類別：顯示整體元素統計
-      txt.innerHTML = buildNeutralDeepHTML(cards);
-    } else {
-      txt.innerHTML = deepHTML;
-    }
-    air.classList.add('show');
+  // 未設定 API Key → 顯示設定浮層
+  if (!ANTHROPIC_API_KEY) {
+    showWorkerSetup(type);
+    return;
   }
 
-  btn.innerHTML = '✦ 已分析';
-  btn.disabled  = true;
+  // ── UI：載入狀態 ────────────────────────────────────
+  btn.disabled = true;
+  btn.innerHTML = '⟳ 智者解讀中…';
+  air.classList.add('show');
+  txt.innerHTML = `
+    <div style="text-align:center;padding:32px 0;">
+      <div style="display:inline-flex;gap:6px;align-items:center;">
+        <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
+      </div>
+      <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.25em;
+        color:var(--gold);opacity:.5;margin-top:14px;">智者正在凝視牌面…</div>
+    </div>`;
+
+  // ── 組裝 prompt ─────────────────────────────────────
+  const prompt = buildEnrichedPrompt(type);
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: type === 'daily' ? 600 : 1000,
+        system: '你是一位深諳塔羅、五行、榮格心理學的解讀大師。用繁體中文回答，語氣溫柔而有詩意，如宇宙透過牌卡低語。',
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    // 先取得原始文字，再嘗試解析
+    const rawText = await res.text();
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch(e) {
+      // 非 JSON 回應（可能是 CORS 錯誤頁）
+      throw new Error(`伺服器回傳非預期格式（HTTP ${res.status}）\n\n請確認 API Key 正確，或改用 Cloudflare Worker 代理。\n\n${rawText.slice(0,100)}`);
+    }
+
+    if (!res.ok) {
+      const errMsg = data?.error?.message || `HTTP ${res.status}`;
+      if (res.status === 401) throw new Error('API Key 無效或已過期，請重新輸入正確的 Key');
+      if (res.status === 403) throw new Error('API Key 權限不足，請確認已開啟 API 使用權限');
+      if (res.status === 429) throw new Error('API 使用量已達上限，請稍後再試');
+      throw new Error(errMsg);
+    }
+
+    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+
+    const raw = data.content?.[0]?.text || '';
+    if (!raw) throw new Error('AI 回傳空白內容，請重試');
+    const rendered = renderMarkdown(raw);
+
+    txt.innerHTML = `
+      <div class="ai-response">
+        <div class="ai-resp-header">
+          <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;
+            color:var(--gold);opacity:.55;">✦ CLAUDE AI · 深度解讀 ✦</span>
+        </div>
+        <div class="ai-resp-body"><p>${rendered}</p></div>
+        <div class="ai-resp-footer">
+          <span style="font-size:11px;color:var(--silver);opacity:.35;">
+            ${type==='daily'?S.dailyCard.name:SPREADS[S.selectedSpread].name} ·
+            ${new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})}
+          </span>
+          <button onclick="getAI('${type}')" style="
+            background:none;border:1px solid rgba(201,168,76,.25);border-radius:12px;
+            padding:4px 12px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;
+            color:var(--gold);opacity:.6;cursor:pointer;">
+            ↺ 重新解讀
+          </button>
+        </div>
+      </div>`;
+
+    btn.innerHTML = '✦ 已解讀';
+
+    // 更新語音內容
+    S.speech[type] = { text: raw, rate: 0.9 };
+
+  } catch (err) {
+    const errLines = err.message.split('\n').map(l =>
+      `<div style="margin-top:3px;">${l}</div>`
+    ).join('');
+    txt.innerHTML = `
+      <div style="padding:16px;border:1px solid rgba(231,76,60,.3);border-radius:10px;
+        background:rgba(231,76,60,.06);">
+        <div style="color:#e07070;font-family:'Cinzel',serif;font-size:10px;
+          letter-spacing:.2em;margin-bottom:10px;">⚠ 連線錯誤</div>
+        <div style="font-size:13px;color:var(--cream);line-height:1.8;">${errLines}</div>
+        <button onclick="
+          localStorage.removeItem('tarot_api_key');
+          ANTHROPIC_API_KEY='';
+          document.getElementById('${btnId}').disabled=false;
+          document.getElementById('${btnId}').innerHTML='✦ 深度分析';
+          showWorkerSetup('${type}');
+        " style="margin-top:12px;background:none;border:1px solid rgba(201,168,76,.3);
+          border-radius:8px;padding:7px 14px;color:var(--gold);font-size:11px;cursor:pointer;">
+          重新輸入 API Key
+        </button>
+      </div>`;
+    btn.disabled = false;
+    btn.innerHTML = '✦ 深度分析';
+  }
 }
 
 // ── 每日一牌深度解析面板（單牌版本）─────────────────────────────
@@ -3763,18 +3946,24 @@ document.getElementById('saveModal').addEventListener('click',function(e){if(e.t
 // ═══════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════
-initDaily();
-renderLib();
-</script>
+window.onerror = function(msg, src, line, col, err) {
+  console.error('Global error:', msg, 'line:', line, err);
+};
 
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => console.log('[SW] 已註冊:', reg.scope))
-      .catch(err => console.warn('[SW] 註冊失敗:', err));
+try { initDaily(); } catch(e) { console.error('initDaily error:', e); }
+try { renderLib(); } catch(e) { console.error('renderLib error:', e); }
+
+// 確保按鈕狀態正確
+document.addEventListener('DOMContentLoaded', function() {
+  ['dAIBtn','sAIBtn'].forEach(id=>{
+    const b=document.getElementById(id);
+    if(b){b.disabled=false;b.innerHTML='✦ 深度分析';}
   });
-}
+});
+['dAIBtn','sAIBtn'].forEach(id=>{
+  const b=document.getElementById(id);
+  if(b){b.disabled=false;b.innerHTML='✦ 深度分析';}
+});
 </script>
 </body>
 </html>
