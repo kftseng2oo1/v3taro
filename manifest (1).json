@@ -1,0 +1,54 @@
+{
+  "name": "AI TAROT",
+  "short_name": "AI TAROT",
+  "description": "",
+  "start_url": "/v3taro/",
+  "scope": "/v3taro/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#1a73e8",
+  "background_color": "#ffffff",
+  "lang": "zh-TW",
+  "categories": [
+    "utilities"
+  ],
+  "shortcuts": [
+    {
+      "name": "開啟 AI TAROT",
+      "short_name": "AI TAROT",
+      "url": "/v3taro/",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

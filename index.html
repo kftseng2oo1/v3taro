@@ -570,6 +570,45 @@ margin-top:5px;cursor:pointer;text-decoration:underline;display:inline-block;}
 .ai-resp-footer{display:flex;justify-content:space-between;align-items:center;
   margin-top:16px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);}
 
+/* ── FOLLOW-UP 追問 ── */
+.followup-area{margin-top:14px;border-top:1px solid rgba(201,168,76,.12);padding-top:14px;}
+.followup-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,.04);
+  border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px 14px;
+  font-size:14px;color:var(--cream);font-family:'Crimson Pro',serif;outline:none;
+  resize:none;line-height:1.6;}
+.followup-input:focus{border-color:rgba(201,168,76,.45);}
+.followup-btn{margin-top:8px;width:100%;padding:10px;background:rgba(201,168,76,.1);
+  border:1px solid rgba(201,168,76,.3);border-radius:8px;color:var(--gold);
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;cursor:pointer;}
+.followup-history{margin-top:12px;}
+.followup-q{font-size:13px;color:var(--gold);opacity:.7;margin-bottom:4px;font-style:italic;}
+.followup-a{font-size:14px;color:var(--cream);line-height:1.85;opacity:.88;
+  padding:10px 14px;background:rgba(255,255,255,.03);border-radius:8px;
+  border-left:2px solid rgba(201,168,76,.3);margin-bottom:12px;}
+
+/* ── SCENARIO TEMPLATES 主題模板 ── */
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.scenario-card{background:linear-gradient(135deg,rgba(30,15,53,.7),rgba(10,6,18,.8));
+  border:1px solid rgba(201,168,76,.18);border-radius:12px;padding:14px 12px;
+  cursor:pointer;text-align:center;transition:all .25s;position:relative;overflow:hidden;}
+.scenario-card:active{transform:scale(.97);}
+.scenario-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,
+  rgba(201,168,76,.06),transparent);opacity:0;transition:opacity .25s;}
+.scenario-card:active::before{opacity:1;}
+.sc-emoji{font-size:28px;margin-bottom:6px;}
+.sc-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.15em;
+  color:var(--gold);margin-bottom:4px;}
+.sc-desc{font-size:11px;color:var(--silver);opacity:.55;line-height:1.5;}
+.scenario-section{margin-bottom:24px;}
+.scenario-lbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--gold);opacity:.5;margin-bottom:12px;text-align:center;}
+
+/* ── SHARE CARD ── */
+.share-btn{background:none;border:1px solid rgba(138,80,200,.35);border-radius:12px;
+  padding:4px 12px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;
+  color:#c8a8ff;opacity:.7;cursor:pointer;}
+#shareCanvas{display:none;}
+
 /* ── DEEP ANALYSIS REPORT ── */
 .deep-report{background:linear-gradient(135deg,rgba(10,6,18,.97),rgba(20,10,40,.9));
 border:1px solid rgba(201,168,76,.3);border-radius:14px;padding:24px;margin:14px 0;
@@ -613,13 +652,13 @@ color:var(--gold);opacity:.55;margin-bottom:8px;}
 </style>
 
 <!-- PWA Meta — auto-injected by PWA 打包神器 -->
-<meta name="application-name" content="AI易經塔羅">
+<meta name="application-name" content="AI TAROT">
 <meta name="description" content="">
 <meta name="theme-color" content="#1a73e8">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="AI易經塔羅">
+<meta name="apple-mobile-web-app-title" content="AI TAROT">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.svg">
 <script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){console.log('[SW] registered:',r.scope)}).catch(function(e){console.warn('[SW] failed:',e)});});}</script>
@@ -785,9 +824,24 @@ color:var(--gold);opacity:.55;margin-bottom:8px;}
           <button class="btn-s" onclick="showWorkerSetup('daily')" title="設定 API Key">⚙</button>
           <button class="btn-s" onclick="openSaveModal('daily')">儲存至日誌</button>
           <button class="btn-s" onclick="resetDaily()">重新抽牌</button>
+          <button class="btn-s" id="notifToggleBtn" onclick="toggleNotification()" style="color:var(--silver);">🔕 每日提醒</button>
         </div>
         <div class="air" id="dailyAIR">
           <div class="air-lbl">✦ Claude AI · 深度解讀 ✦</div>
+          <div id="styleBar_daily" style="display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;">
+            <button onclick="setStyle('poetic','daily')" id="styleBtn_poetic_daily"
+              style="padding:4px 12px;border-radius:14px;font-size:11px;cursor:pointer;transition:all .2s;
+                border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.1);color:var(--gold);">
+              🌙 詩意</button>
+            <button onclick="setStyle('psychological','daily')" id="styleBtn_psychological_daily"
+              style="padding:4px 12px;border-radius:14px;font-size:11px;cursor:pointer;transition:all .2s;
+                border:1px solid rgba(255,255,255,.1);background:none;color:var(--silver);">
+              🧠 心理</button>
+            <button onclick="setStyle('practical','daily')" id="styleBtn_practical_daily"
+              style="padding:4px 12px;border-radius:14px;font-size:11px;cursor:pointer;transition:all .2s;
+                border:1px solid rgba(255,255,255,.1);background:none;color:var(--silver);">
+              ⚡ 直白</button>
+          </div>
           <div id="dAITxt"></div>
           <div class="speech-bar" id="dSpeechBar" style="display:none;">
             <div class="speech-wave">
@@ -843,6 +897,44 @@ color:var(--gold);opacity:.55;margin-bottom:8px;}
       </div>
       <div class="ritual">
         <div class="sh">設定意圖</div>
+
+        <!-- ── 主題模板快速選擇 ── -->
+        <div class="scenario-section">
+          <div class="scenario-lbl">✦ 常用主題模板</div>
+          <div class="scenario-grid">
+            <div class="scenario-card" onclick="applyScenario('love3','感情三選一','我在感情中面臨選擇，想了解與這三個方向的能量連結','love')">
+              <div class="sc-emoji">💕</div>
+              <div class="sc-title">感情三選一</div>
+              <div class="sc-desc">在幾個對象或方向中抉擇</div>
+            </div>
+            <div class="scenario-card" onclick="applyScenario('career','工作決策','我面臨工作上的重要決定，想了解各選項的能量走向','career')">
+              <div class="sc-emoji">🌲</div>
+              <div class="sc-title">工作決策</div>
+              <div class="sc-desc">換工作、升遷、創業抉擇</div>
+            </div>
+            <div class="scenario-card" onclick="applyScenario('month','本月運勢','我想了解這個月的整體能量走向與需要注意的事','general')">
+              <div class="sc-emoji">🌙</div>
+              <div class="sc-title">本月運勢</div>
+              <div class="sc-desc">月度能量概覽與建議</div>
+            </div>
+            <div class="scenario-card" onclick="applyScenario('invest','投資決策','我考慮一項投資，想了解目前能量場是否支持這個決定','invest')">
+              <div class="sc-emoji">⚖️</div>
+              <div class="sc-title">投資決策</div>
+              <div class="sc-desc">資金配置與市場能量</div>
+            </div>
+            <div class="scenario-card" onclick="applyScenario('relation','關係解析','我想深入了解一段重要關係的本質與走向','love')">
+              <div class="sc-emoji">🔮</div>
+              <div class="sc-title">關係解析</div>
+              <div class="sc-desc">深入剖析一段關係</div>
+            </div>
+            <div class="scenario-card" onclick="applyScenario('heal','身心療癒','我感到疲憊或失衡，想了解身心目前的能量狀態與療癒方向','health')">
+              <div class="sc-emoji">🌿</div>
+              <div class="sc-title">身心療癒</div>
+              <div class="sc-desc">能量失衡與調整方向</div>
+            </div>
+          </div>
+        </div>
+
         <div class="ritual-circle">🔮</div>
         <div class="ritual-prompt">閉上眼睛，深呼吸三次<br>讓心中的問題在意識中成形</div>
         <textarea class="q-input" id="spreadQ" placeholder="我想了解關於…（可省略，直接抽牌亦可）"></textarea>
@@ -899,6 +991,21 @@ color:var(--gold);opacity:.55;margin-bottom:8px;}
       </div>
       <div class="air" id="spreadAIR">
         <div class="air-lbl">✦ Claude AI · 深度解讀 ✦</div>
+        <div id="styleBar_spread" style="display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;">
+          <button onclick="setStyle('poetic','spread')" id="styleBtn_poetic_spread"
+            style="padding:4px 12px;border-radius:14px;font-size:11px;cursor:pointer;
+              border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.1);color:var(--gold);">
+            🌙 詩意</button>
+          <button onclick="setStyle('psychological','spread')" id="styleBtn_psychological_spread"
+            style="padding:4px 12px;border-radius:14px;font-size:11px;cursor:pointer;
+              border:1px solid rgba(255,255,255,.1);background:none;color:var(--silver);">
+            🧠 心理</button>
+          <button onclick="setStyle('practical','spread')" id="styleBtn_practical_spread"
+            style="padding:4px 12px;border-radius:14px;font-size:11px;cursor:pointer;
+              border:1px solid rgba(255,255,255,.1);background:none;color:var(--silver);">
+            ⚡ 直白</button>
+        </div>
+        <div id="moonPhaseBar" style="text-align:center;font-size:12px;color:var(--silver);opacity:.5;margin-bottom:8px;"></div>
         <div id="sAITxt"></div>
         <div class="speech-bar" id="sSpeechBar" style="display:none;">
           <div class="speech-wave">
@@ -2742,6 +2849,76 @@ function revertAutoDetect(catKey) {
 }
 
 // ── Build enriched prompt with Five-Element layer ──────────────
+// ═══════════════════════════════════════════════════════════════
+// 功能 2：解讀風格定義
+// ═══════════════════════════════════════════════════════════════
+const READING_STYLES = {
+  poetic: {
+    label:'詩意靈性派', icon:'🌙',
+    desc:'如宇宙透過牌卡低語，充滿意象與詩意',
+    systemPrompt:'你是一位融合東方玄學與西方神秘學的塔羅詩人。解讀充滿意象與隱喻，語言如詩歌般流動，讓人感到被宇宙深深擁抱與看見。',
+    styleNote:'語氣：詩意、溫柔、充滿意象，如月光灑落，引導而不說教。',
+  },
+  psychological: {
+    label:'榮格心理分析派', icon:'🧠',
+    desc:'深度心理剖析，揭示潛意識模式',
+    systemPrompt:'你是一位融合榮格分析心理學的塔羅治療師。以原型理論、陰影整合、集體無意識為框架，深度剖析牌面背後的心理模式，幫助問者看見內在的真實動力。',
+    styleNote:'語氣：專業而溫暖，如心理諮詢師，直指核心卻不失關懷。',
+  },
+  practical: {
+    label:'直白行動建議派', icon:'⚡',
+    desc:'務實清晰，直接給出可執行的建議',
+    systemPrompt:'你是一位務實的塔羅顧問。跳過玄學術語，直接將牌面訊息轉化為清晰、可立即執行的行動建議。說話直接、有力、具體。',
+    styleNote:'語氣：直接、務實、有力，如老練的顧問，給出清晰可行的方向。',
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 功能 6：月相與節氣計算
+// ═══════════════════════════════════════════════════════════════
+function getMoonPhase() {
+  const now = new Date();
+  const year = now.getFullYear(), month = now.getMonth()+1, day = now.getDate();
+  // 簡化農曆月相計算（以朔望週期 29.53 天為基準）
+  const known = new Date(2000,0,6); // 已知新月
+  const diff  = (now - known) / (1000*60*60*24);
+  const cycle = diff % 29.53;
+  const phase = Math.floor(cycle);
+  if (phase <= 1)  return { name:'新月', icon:'🌑', energy:'新開始、播種意圖', advice:'此時適合設立新目標，能量集中而純粹。' };
+  if (phase <= 6)  return { name:'眉月', icon:'🌒', energy:'萌芽、行動啟動',   advice:'能量逐漸增強，是推進計畫的好時機。' };
+  if (phase <= 8)  return { name:'上弦月', icon:'🌓', energy:'決策、行動',     advice:'月亮的張力要求你做出選擇並採取行動。' };
+  if (phase <= 13) return { name:'盈凸月', icon:'🌔', energy:'積累、加速',     advice:'能量旺盛，適合全力推進中的事務。' };
+  if (phase <= 15) return { name:'滿月', icon:'🌕', energy:'圓滿、顯化、情緒高峰', advice:'能量達到頂點，顯化力量最強，同時情緒也最敏感。' };
+  if (phase <= 20) return { name:'虧凸月', icon:'🌖', energy:'收穫、感恩',     advice:'是時候回顧成果，整合所學。' };
+  if (phase <= 22) return { name:'下弦月', icon:'🌗', energy:'釋放、轉化',     advice:'月亮召喚你放下不再服務你的事物。' };
+  if (phase <= 27) return { name:'殘月', icon:'🌘', energy:'休養、內省',      advice:'能量收縮，適合靜心、整合與休息。' };
+  return { name:'新月前夕', icon:'🌑', energy:'空白與準備',               advice:'舊週期即將完成，為新開始保留空間。' };
+}
+
+function getSolarTerm() {
+  const d = new Date();
+  const m = d.getMonth()+1, day = d.getDate();
+  const terms = [
+    [1,6,'小寒','金水交匯，宜收斂蓄勢'],   [1,20,'大寒','寒極陽生，轉機將至'],
+    [2,4,'立春','木氣萌發，萬物復甦'],      [2,19,'雨水','水潤大地，情感流動'],
+    [3,6,'驚蟄','雷動春生，行動時機'],      [3,21,'春分','陰陽平衡，適合整合'],
+    [4,5,'清明','氣清景明，思緒澄淨'],      [4,20,'穀雨','雨生百穀，孕育成長'],
+    [5,6,'立夏','火氣漸旺，行動力增'],      [5,21,'小滿','物至小成，謹防過滿'],
+    [6,6,'芒種','播種耕耘，努力不懈'],      [6,21,'夏至','陽極陰生，至盛而轉'],
+    [7,7,'小暑','暑熱漸旺，保持冷靜'],      [7,23,'大暑','極熱考驗，磨礪意志'],
+    [8,7,'立秋','金氣收斂，收穫在即'],      [8,23,'處暑','暑氣漸退，整理清算'],
+    [9,8,'白露','露凝成白，澄清是非'],      [9,23,'秋分','再次平衡，深思內觀'],
+    [10,8,'寒露','金水轉深，內省智慧'],     [10,23,'霜降','肅殺之氣，斷捨離'],
+    [11,7,'立冬','水氣封藏，蓄積能量'],     [11,22,'小雪','雪落靜心，向內沉澱'],
+    [12,7,'大雪','雪封大地，深度休眠'],     [12,22,'冬至','陰極陽生，一陽來復'],
+  ];
+  let current = terms[0];
+  for (const t of terms) {
+    if (m > t[0] || (m === t[0] && day >= t[1])) current = t;
+  }
+  return { name: current[2], energy: current[3] };
+}
+
 function buildEnrichedPrompt(type) {
   let cards, spreadName, question;
   if (type === 'daily') {
@@ -2751,34 +2928,66 @@ function buildEnrichedPrompt(type) {
     question = document.getElementById('spreadQ')?.value || '';
   }
 
-  const engine   = new TarotAnalysisEngine(cards);
-  const catKey   = type === 'spread' ? (S.selectedCategory || 'general') : 'general';
-  const fiveEl   = new FiveElementAnalyzer(cards, catKey);
-  const baseReport = engine.generateTextReport();
-  const fiveReport = fiveEl.generateTextReport();
-  const catInfo  = CATEGORY_LOGIC[catKey];
-  const wxInfo   = WUXING_CONFIG[catInfo.wuxing];
+  const engine    = new TarotAnalysisEngine(cards);
+  const catKey    = type === 'spread' ? (S.selectedCategory || 'general') : 'general';
+  const fiveEl    = new FiveElementAnalyzer(cards, catKey);
+  const baseReport= engine.generateTextReport();
+  const fiveReport= fiveEl.generateTextReport();
+  const catInfo   = CATEGORY_LOGIC[catKey];
+  const wxInfo    = WUXING_CONFIG[catInfo.wuxing];
+
+  // ── 功能 6：月相 + 節氣 ──────────────────────────────
+  const moon   = getMoonPhase();
+  const solar  = getSolarTerm();
+  const cosmicCtx = `【當前宇宙場域】
+月相：${moon.icon} ${moon.name}（${moon.energy}）— ${moon.advice}
+節氣：${solar.name}（${solar.energy}）`;
+
+  // ── 功能 2：解讀風格 ────────────────────────────────
+  const style  = READING_STYLES[S.readingStyle] || READING_STYLES.poetic;
 
   if (type === 'daily') {
     const c = S.dailyCard;
-    return `你是一位深諳塔羅奧義的占卜師，融合榮格心理學（原型理論）、傳統神秘學、東方哲學（易經）與五行能量學進行解析。
+    return `${style.systemPrompt}
 
 今日抽到：${c.name}（${c.reversed?'逆位':'正位'}）
 元素：${c.el}　行星：${c.pl}
 關鍵詞：${c.kw.join('、')}
+${cosmicCtx}
 ${baseReport}
 
-請提供以下三個維度的深度解析（總計280字以內）：
+請提供以下三個維度的深度解析（總計400字以內）：
 
 1. **心理原型**：榮格原型視角——此牌喚醒內在哪個部分？是什麼在尋求整合？
-2. **能量洞見**：${c.el}元素×${c.pl}星象×今日宇宙場域，共同指向什麼訊息？
-3. **今日行動煉金術**：一個將牌面智慧轉化為具體行動的建議，像是「將金子從礦石中提煉出來」
+2. **能量洞見**：${c.el}元素×${c.pl}星象×${moon.name}月相×${solar.name}節氣，共同指向什麼訊息？
+3. **今日行動煉金術**：一個將牌面智慧轉化為具體行動的建議
 
-語氣：如宇宙透過牌卡低語，溫柔而有詩意，不神秘化，讓人感到被支持、被看見。
+${style.styleNote}
 請用繁體中文回答。`;
+
   } else {
     const sp = SPREADS[S.selectedSpread];
-    const cardsDesc = S.spreadCards.map((c,i)=>`${sp.pos[i]}：${c.name}（${c.reversed?'逆位':'正位'}，${c.el}元素，${c.pl}）`).join('\n');
+
+    // ── 功能 4：時間軸解讀 ────────────────────────────
+    const timePositions = ['過去','現在','未來','根源','近期','遠期'];
+    const timelineCards = cards.map((c,i)=>{
+      const pos = sp.pos[i] || `第${i+1}張`;
+      const isTimeline = timePositions.some(t=>pos.includes(t));
+      return `${pos}${isTimeline?'【時間軸】':''}：${c.name}（${c.reversed?'逆位':'正位'}，${c.el}元素，${c.pl}）`;
+    }).join('\n');
+
+    // ── 功能 5：牌與牌的對話 ──────────────────────────
+    let cardDialogue = '';
+    if (cards.length >= 2) {
+      const pairs = [];
+      for (let i=0; i<Math.min(cards.length,4)-1; i++) {
+        const a=cards[i], b=cards[i+1];
+        const sameEl = a.el===b.el ? `（同為${a.el}元素，能量共鳴）` : `（${a.el}與${b.el}的對話）`;
+        pairs.push(`• ${a.name} ↔ ${b.name}${sameEl}`);
+      }
+      cardDialogue = `\n【牌與牌的能量對話】\n${pairs.join('\n')}`;
+    }
+
     const catPrompt = catKey !== 'general' && wxInfo ? `
 【五行問題框架】
 此問題屬「${wxInfo.icon}${wxInfo.name}行」類型（${catInfo.label}）。
@@ -2786,24 +2995,28 @@ ${baseReport}
 對應牌組：${wxInfo.suitNames.join('（主）、')}
 請在解析時，以此五行框架作為能量詮釋的底層邏輯。` : '';
 
-    return `你是一位深諳塔羅奧義的占卜師，融合榮格心理學、傳統神秘學、東方哲學（五行易經）進行多層次解析。
+    const hasTimeline = cards.some((c,i)=>timePositions.some(t=>(sp.pos[i]||'').includes(t)));
+
+    return `${style.systemPrompt}
 
 牌陣：${spreadName}${question?`\n問題：${question}`:''}
+${cosmicCtx}
 ${catPrompt}
 
 【抽出牌卡】
-${cardsDesc}
+${timelineCards}
+${cardDialogue}
 
 ${baseReport}
 ${fiveReport}
 
-根據以上多維度結構化分析，請提供（總計450字以內）：
+根據以上多維度結構化分析，請提供（總計800字以內）：
 
-1. **五行能量故事**：以「${wxInfo?wxInfo.name+'行・'+wxInfo.theme:'能量'}」為主軸，將各牌位編織成連貫敘事，融入元素衝突、大牌原型的深層含義
-2. **榮格深層洞見**：揭示最核心的心理層次訊息（尤其是大阿爾克那的原型智慧）——什麼樣的內在模式正在被照見？
-3. **煉金三步驟**：根據五行契合/失衡狀態，給出三個具體可行的「將能量轉化為行動」的建議
+1. **五行能量故事**：以「${wxInfo?wxInfo.name+'行・'+wxInfo.theme:'能量'}」為主軸，將各牌位編織成連貫敘事，融入${moon.name}月相（${moon.energy}）與${solar.name}節氣的宇宙能量
+2. **榮格深層洞見**：揭示最核心的心理層次訊息——什麼樣的內在模式正在被照見？
+${hasTimeline?'3. **時間軸解讀**：針對過去/現在/未來牌位，說明能量的演變軌跡與時間感\n4.':'3.'} **煉金步驟**：根據五行契合/失衡狀態，給出具體可行的行動建議
 
-語氣：既有東方哲人的通透，又有西方神秘學的詩意，像智慧的老友，讓人感到被深刻理解。
+${style.styleNote}
 請用繁體中文回答。`;
   }
 }
@@ -2919,6 +3132,8 @@ const S = {
   jFilterType: 'all',
   journal: [],
   speech: { daily: null, spread: null },
+  readingStyle: localStorage.getItem('tarot_reading_style') || 'poetic',
+  notifEnabled: localStorage.getItem('tarot_notif') === 'true',
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -3271,14 +3486,12 @@ const EL_TO_SUIT = { '火':'wands','水':'cups','土':'pentacles','風':'swords'
 // ═══════════════════════════════════════════════════════════════
 // API KEY 設定（直接呼叫 Anthropic，存於 localStorage）
 // ═══════════════════════════════════════════════════════════════
-let ANTHROPIC_API_KEY = localStorage.getItem('tarot_api_key') || '';
+// ═══════════════════════════════════════════════════════════════
+// CLOUDFLARE WORKER 設定
+// ═══════════════════════════════════════════════════════════════
+const WORKER_URL = 'https://arcar.kftseng2oo1.workers.dev';
 
-function setApiKey(key) {
-  ANTHROPIC_API_KEY = key.trim();
-  localStorage.setItem('tarot_api_key', ANTHROPIC_API_KEY);
-}
-
-// ── API Key 設定浮層 ───────────────────────────────────────────
+// ── Worker 設定浮層（⚙ 按鈕用）───────────────────────────────
 function showWorkerSetup(callbackType) {
   const existing = document.getElementById('workerSetupModal');
   if (existing) existing.remove();
@@ -3295,46 +3508,31 @@ function showWorkerSetup(callbackType) {
       border:1px solid rgba(201,168,76,.4);border-radius:16px;
       padding:28px;max-width:420px;width:100%;">
       <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.3em;
-        color:var(--gold);opacity:.7;margin-bottom:8px;">AI 深度分析設定</div>
-      <div style="font-size:15px;color:var(--cream);font-weight:600;margin-bottom:16px;">
-        🔮 輸入 Anthropic API Key
+        color:var(--gold);opacity:.7;margin-bottom:8px;">AI 深度分析</div>
+      <div style="font-size:15px;color:var(--cream);font-weight:600;margin-bottom:12px;">
+        🔮 Cloudflare Worker 已連接
       </div>
-      <div style="font-size:12.5px;color:var(--silver);opacity:.7;line-height:1.8;margin-bottom:16px;">
-        請到 <strong style="color:var(--gold);">console.anthropic.com</strong> → API Keys 取得。<br>
-        格式：<code style="color:var(--gold);">sk-ant-...</code><br>
-        Key 只存在你的裝置本地，不會上傳任何地方。
+      <div style="font-size:13px;color:var(--silver);opacity:.7;line-height:1.8;margin-bottom:16px;">
+        Worker：<code style="color:var(--gold);">arcar.kftseng2oo1.workers.dev</code><br>
+        狀態：<span style="color:#7ec87e;">✅ 已設定 ANTHROPIC_API_KEY</span>
       </div>
-      <input id="apiKeyInput" type="text"
-        placeholder="sk-ant-api03-..."
-        value="${ANTHROPIC_API_KEY}"
-        style="width:100%;box-sizing:border-box;
-          background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);
-          border-radius:8px;padding:11px 14px;font-size:12px;color:var(--cream);
-          font-family:'Crimson Pro',serif;outline:none;margin-bottom:14px;"
-      />
-      <div style="display:flex;gap:10px;">
-        <button onclick="
-          const key=document.getElementById('apiKeyInput').value.trim();
-          if(!key){ alert('請輸入 API Key'); return; }
-          setApiKey(key);
-          document.getElementById('workerSetupModal').remove();
-          getAI('${callbackType}');
-        " style="flex:1;padding:11px;background:rgba(201,168,76,.15);
-          border:1px solid rgba(201,168,76,.45);border-radius:8px;
-          color:var(--gold);font-family:'Cinzel',serif;font-size:11px;
-          letter-spacing:.15em;cursor:pointer;">
-          確認並分析
-        </button>
-        <button onclick="document.getElementById('workerSetupModal').remove();"
-          style="padding:11px 18px;background:none;border:1px solid rgba(255,255,255,.1);
-            border-radius:8px;color:var(--silver);font-size:12px;cursor:pointer;opacity:.6;">
-          取消
-        </button>
-      </div>
+      <button onclick="
+        document.getElementById('workerSetupModal').remove();
+        getAI('${callbackType}');
+      " style="width:100%;padding:11px;background:rgba(201,168,76,.15);
+        border:1px solid rgba(201,168,76,.45);border-radius:8px;
+        color:var(--gold);font-family:'Cinzel',serif;font-size:11px;
+        letter-spacing:.15em;cursor:pointer;margin-bottom:8px;">
+        ✦ 開始 AI 解讀
+      </button>
+      <button onclick="document.getElementById('workerSetupModal').remove();"
+        style="width:100%;padding:9px;background:none;border:1px solid rgba(255,255,255,.1);
+          border-radius:8px;color:var(--silver);font-size:12px;cursor:pointer;opacity:.6;">
+        取消
+      </button>
     </div>
   `;
   document.body.appendChild(modal);
-  setTimeout(() => document.getElementById('apiKeyInput').focus(), 100);
 }
 function renderMarkdown(text) {
   return text
@@ -3364,12 +3562,6 @@ async function getAI(type) {
   if (type === 'daily' && !S.dailyCard) return;
   if (type === 'spread' && (!S.spreadCards || !S.spreadCards.length)) return;
 
-  // 未設定 API Key → 顯示設定浮層
-  if (!ANTHROPIC_API_KEY) {
-    showWorkerSetup(type);
-    return;
-  }
-
   // ── UI：載入狀態 ────────────────────────────────────
   btn.disabled = true;
   btn.innerHTML = '⟳ 智者解讀中…';
@@ -3387,36 +3579,28 @@ async function getAI(type) {
   const prompt = buildEnrichedPrompt(type);
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch(WORKER_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
-        max_tokens: type === 'daily' ? 600 : 1000,
+        max_tokens: type === 'daily' ? 800 : 2000,
         system: '你是一位深諳塔羅、五行、榮格心理學的解讀大師。用繁體中文回答，語氣溫柔而有詩意，如宇宙透過牌卡低語。',
         messages: [{ role: 'user', content: prompt }],
       }),
     });
 
-    // 先取得原始文字，再嘗試解析
     const rawText = await res.text();
     let data;
     try {
       data = JSON.parse(rawText);
     } catch(e) {
-      // 非 JSON 回應（可能是 CORS 錯誤頁）
-      throw new Error(`伺服器回傳非預期格式（HTTP ${res.status}）\n\n請確認 API Key 正確，或改用 Cloudflare Worker 代理。\n\n${rawText.slice(0,100)}`);
+      throw new Error(`Worker 回傳非預期格式（HTTP ${res.status}）\n${rawText.slice(0,120)}`);
     }
 
     if (!res.ok) {
       const errMsg = data?.error?.message || `HTTP ${res.status}`;
-      if (res.status === 401) throw new Error('API Key 無效或已過期，請重新輸入正確的 Key');
-      if (res.status === 403) throw new Error('API Key 權限不足，請確認已開啟 API 使用權限');
+      if (res.status === 401) throw new Error('ANTHROPIC_API_KEY 無效，請至 Cloudflare Worker 重新設定');
       if (res.status === 429) throw new Error('API 使用量已達上限，請稍後再試');
       throw new Error(errMsg);
     }
@@ -3428,30 +3612,49 @@ async function getAI(type) {
     const rendered = renderMarkdown(raw);
 
     txt.innerHTML = `
-      <div class="ai-response">
+      <div class="ai-response" id="aiRespBlock_${type}">
         <div class="ai-resp-header">
           <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;
             color:var(--gold);opacity:.55;">✦ CLAUDE AI · 深度解讀 ✦</span>
         </div>
-        <div class="ai-resp-body"><p>${rendered}</p></div>
+        <div class="ai-resp-body" id="aiRespBody_${type}"><p>${rendered}</p></div>
         <div class="ai-resp-footer">
           <span style="font-size:11px;color:var(--silver);opacity:.35;">
             ${type==='daily'?S.dailyCard.name:SPREADS[S.selectedSpread].name} ·
             ${new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})}
           </span>
-          <button onclick="getAI('${type}')" style="
-            background:none;border:1px solid rgba(201,168,76,.25);border-radius:12px;
-            padding:4px 12px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;
-            color:var(--gold);opacity:.6;cursor:pointer;">
-            ↺ 重新解讀
+          <div style="display:flex;gap:6px;">
+            <button class="share-btn" onclick="shareReading('${type}')">⬆ 分享</button>
+            <button onclick="getAI('${type}')" style="
+              background:none;border:1px solid rgba(201,168,76,.25);border-radius:12px;
+              padding:4px 12px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;
+              color:var(--gold);opacity:.6;cursor:pointer;">
+              ↺ 重新解讀
+            </button>
+          </div>
+        </div>
+        <!-- 追問區 -->
+        <div class="followup-area">
+          <div class="followup-history" id="followupHistory_${type}"></div>
+          <textarea class="followup-input" id="followupInput_${type}" rows="2"
+            placeholder="繼續追問智者… 例如：那我應該怎麼做？"></textarea>
+          <button class="followup-btn" onclick="sendFollowup('${type}')">
+            ✦ 繼續追問
           </button>
         </div>
       </div>`;
+    // 儲存原始解讀供分享用
+    S.lastReading = S.lastReading || {};
+    S.lastReading[type] = { raw, cards: type==='daily'?[S.dailyCard]:S.spreadCards };
 
     btn.innerHTML = '✦ 已解讀';
 
     // 更新語音內容
     S.speech[type] = { text: raw, rate: 0.9 };
+
+    // 功能 1：自動存入日誌
+    const readingCards = type==='daily' ? [S.dailyCard] : S.spreadCards;
+    saveReadingToJournal(type, raw, readingCards);
 
   } catch (err) {
     const errLines = err.message.split('\n').map(l =>
@@ -3464,19 +3667,343 @@ async function getAI(type) {
           letter-spacing:.2em;margin-bottom:10px;">⚠ 連線錯誤</div>
         <div style="font-size:13px;color:var(--cream);line-height:1.8;">${errLines}</div>
         <button onclick="
-          localStorage.removeItem('tarot_api_key');
-          ANTHROPIC_API_KEY='';
           document.getElementById('${btnId}').disabled=false;
           document.getElementById('${btnId}').innerHTML='✦ 深度分析';
-          showWorkerSetup('${type}');
-        " style="margin-top:12px;background:none;border:1px solid rgba(201,168,76,.3);
+          getAI('${type}');
+        " style="margin-top:12px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);
           border-radius:8px;padding:7px 14px;color:var(--gold);font-size:11px;cursor:pointer;">
-          重新輸入 API Key
+          重試
         </button>
       </div>`;
     btn.disabled = false;
     btn.innerHTML = '✦ 深度分析';
   }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// 功能 2：解讀風格切換
+// ═══════════════════════════════════════════════════════════════
+function setStyle(style, type) {
+  S.readingStyle = style;
+  localStorage.setItem('tarot_reading_style', style);
+  // 更新兩個面板的按鈕樣式
+  ['daily','spread'].forEach(t => {
+    ['poetic','psychological','practical'].forEach(s => {
+      const btn = document.getElementById(`styleBtn_${s}_${t}`);
+      if (!btn) return;
+      if (s === style) {
+        btn.style.background = 'rgba(201,168,76,.15)';
+        btn.style.borderColor = 'rgba(201,168,76,.4)';
+        btn.style.color = 'var(--gold)';
+      } else {
+        btn.style.background = 'none';
+        btn.style.borderColor = 'rgba(255,255,255,.1)';
+        btn.style.color = 'var(--silver)';
+      }
+    });
+  });
+  // 提示
+  const st = READING_STYLES[style];
+  showToast(`${st.icon} 已切換為「${st.label}」`);
+}
+
+// 初始化風格按鈕狀態
+function initStyleBtns() {
+  setStyle(S.readingStyle, 'all');
+  // 顯示月相
+  const moon = getMoonPhase();
+  const solar = getSolarTerm();
+  const bar = document.getElementById('moonPhaseBar');
+  if (bar) bar.textContent = `${moon.icon} ${moon.name} · ${solar.name} · 能量：${moon.energy}`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 功能 1：AI 解讀自動存入日誌
+// ═══════════════════════════════════════════════════════════════
+function saveReadingToJournal(type, raw, cards) {
+  const cardNames = cards.map(c=>`${c.name}${c.reversed?'↓':''}`).join('、');
+  const entry = {
+    id: Date.now(),
+    date: new Date().toLocaleDateString('zh-TW',{month:'long',day:'numeric',weekday:'short'}),
+    time: new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}),
+    type: type === 'daily' ? '每日一牌' : SPREADS[S.selectedSpread]?.name || '牌陣',
+    cards: cardNames,
+    question: type==='spread' ? (document.getElementById('spreadQ')?.value||'') : '',
+    style: READING_STYLES[S.readingStyle]?.label || '詩意靈性派',
+    moon: getMoonPhase().name,
+    solar: getSolarTerm().name,
+    reading: raw,
+    mood: S.selectedMood || '🌙',
+  };
+  S.journal.unshift(entry);
+  localStorage.setItem('tarotJournal', JSON.stringify(S.journal.slice(0,100)));
+  showToast('✦ 解讀已存入日誌');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 功能 9：每日提醒（PWA 推播）
+// ═══════════════════════════════════════════════════════════════
+async function setupDailyNotification() {
+  if (!('Notification' in window)) {
+    showToast('此裝置不支援推播通知'); return;
+  }
+  if (Notification.permission === 'denied') {
+    showToast('通知權限已被拒絕，請到設定中手動開啟'); return;
+  }
+  const perm = await Notification.requestPermission();
+  if (perm !== 'granted') { showToast('未獲得通知權限'); return; }
+
+  S.notifEnabled = true;
+  localStorage.setItem('tarot_notif', 'true');
+  localStorage.setItem('tarot_notif_hour', '08');
+
+  // 計算距下次早上 8 點的毫秒數
+  const now = new Date();
+  const next = new Date();
+  next.setHours(8,0,0,0);
+  if (now.getHours() >= 8) next.setDate(next.getDate()+1);
+  const delay = next - now;
+
+  // 設定首次通知
+  setTimeout(() => {
+    sendDailyNotif();
+    setInterval(sendDailyNotif, 24*60*60*1000);
+  }, delay);
+
+  showToast(`🔔 每日提醒已開啟（每天早上 8:00）`);
+  updateNotifBtn();
+}
+
+function sendDailyNotif() {
+  if (!S.notifEnabled) return;
+  const msgs = [
+    '🔮 今日牌卡正在等待你的翻閱',
+    '✦ 宇宙有話對你說，今天的塔羅準備好了',
+    '🌙 每日一牌：讓智慧引導你的一天',
+    '⟁ 今日能量已就位，點開來看看',
+  ];
+  new Notification('塔羅秘境 ARCANA', {
+    body: msgs[Math.floor(Math.random()*msgs.length)],
+    icon: 'icons/icon-192.png',
+    badge: 'icons/icon-72.png',
+  });
+}
+
+function updateNotifBtn() {
+  const btn = document.getElementById('notifToggleBtn');
+  if (!btn) return;
+  if (S.notifEnabled) {
+    btn.textContent = '🔔 每日提醒：開啟';
+    btn.style.color = 'var(--gold)';
+    btn.style.borderColor = 'rgba(201,168,76,.4)';
+  } else {
+    btn.textContent = '🔕 每日提醒：關閉';
+    btn.style.color = 'var(--silver)';
+    btn.style.borderColor = 'rgba(255,255,255,.1)';
+  }
+}
+
+function toggleNotification() {
+  if (S.notifEnabled) {
+    S.notifEnabled = false;
+    localStorage.setItem('tarot_notif','false');
+    showToast('🔕 每日提醒已關閉');
+    updateNotifBtn();
+  } else {
+    setupDailyNotification();
+  }
+}
+
+// ── 功能 8：主題模板快速套用
+// ═══════════════════════════════════════════════════════════════
+function applyScenario(id, title, question, catKey) {
+  // 填入問題
+  const qa = document.getElementById('spreadQ');
+  if (qa) qa.value = question;
+
+  // 套用類別
+  const catBtn = document.querySelector(`.cat-btn[data-cat="${catKey}"]`);
+  if (catBtn) selCat(catBtn);
+
+  // 選擇對應牌陣（Celtic Cross 或 三牌陣）
+  const spreadMap = {
+    'love3': 'threeCard', 'career': 'celtic', 'month': 'threeCard',
+    'invest': 'threeCard', 'relation': 'celtic', 'heal': 'threeCard'
+  };
+  const spreadKey = spreadMap[id] || 'threeCard';
+  // 選擇牌陣
+  document.querySelectorAll('.sopt').forEach(b => b.classList.remove('active'));
+  const soptBtn = document.querySelector(`.sopt[data-spread="${spreadKey}"]`);
+  if (soptBtn) { soptBtn.classList.add('active'); S.selectedSpread = spreadKey; }
+
+  // 視覺提示
+  const msg = document.createElement('div');
+  msg.style.cssText = `position:fixed;top:60px;left:50%;transform:translateX(-50%);
+    background:rgba(201,168,76,.9);color:#0a0612;padding:8px 20px;border-radius:20px;
+    font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;z-index:9999;
+    animation:fadeUp .3s ease;`;
+  msg.textContent = `✦ 已套用「${title}」模板`;
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 2000);
+
+  // 滾動到問題輸入區
+  qa?.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 功能 3：追問功能
+// ═══════════════════════════════════════════════════════════════
+async function sendFollowup(type) {
+  const inputEl = document.getElementById(`followupInput_${type}`);
+  const histEl  = document.getElementById(`followupHistory_${type}`);
+  const bodyEl  = document.getElementById(`aiRespBody_${type}`);
+  const question = inputEl?.value?.trim();
+  if (!question) return;
+  if (!WORKER_URL) { showWorkerSetup(type); return; }
+
+  // 取得原始解讀內容
+  const prevReading = S.lastReading?.[type]?.raw || '';
+  const cards = type==='daily' ? [S.dailyCard] : S.spreadCards;
+  const cardsDesc = cards.map(c=>`${c.name}（${c.reversed?'逆位':'正位'}）`).join('、');
+
+  // Loading 狀態
+  const loadId = 'fu_loading_' + Date.now();
+  histEl.insertAdjacentHTML('beforeend', `
+    <div class="followup-q">❓ ${question}</div>
+    <div class="followup-a" id="${loadId}">
+      <span style="opacity:.5;font-size:12px;">智者正在回應…</span>
+    </div>`);
+  inputEl.value = '';
+  inputEl.disabled = true;
+
+  const followupPrompt = `你之前的塔羅解讀內容如下：
+---
+${prevReading}
+---
+牌卡：${cardsDesc}
+
+使用者的追問：「${question}」
+
+請針對這個追問，結合牌卡訊息給出簡潔的回應（150字以內）。語氣溫柔、有洞見，如智者的低語。請用繁體中文。`;
+
+  try {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 300,
+        messages: [{ role:'user', content: followupPrompt }],
+      }),
+    });
+    const rawText = await res.text();
+    const data = JSON.parse(rawText);
+    const answer = data.content?.[0]?.text || '';
+    document.getElementById(loadId).innerHTML = renderMarkdown(answer);
+    // 更新存檔供後續追問參考
+    if (S.lastReading?.[type]) S.lastReading[type].raw += `\n\n[追問：${question}]\n${answer}`;
+  } catch(e) {
+    document.getElementById(loadId).innerHTML = `<span style="color:#e07070;">回應失敗：${e.message}</span>`;
+  }
+  inputEl.disabled = false;
+  inputEl.focus();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 功能 7：分享卡片（Canvas 生成圖片）
+// ═══════════════════════════════════════════════════════════════
+function shareReading(type) {
+  const reading = S.lastReading?.[type];
+  if (!reading) return;
+
+  const cards  = reading.cards || [];
+  const text   = reading.raw || '';
+  const lines  = text.split('\n').filter(l=>l.trim()).slice(0,8);
+  const cardNames = cards.map(c=>c.art+' '+c.name).join('  ');
+  const date   = new Date().toLocaleDateString('zh-TW',{month:'long',day:'numeric'});
+
+  const W=800, H=1000;
+  const canvas = document.createElement('canvas');
+  canvas.width=W; canvas.height=H;
+  const ctx = canvas.getContext('2d');
+
+  // 背景漸層
+  const bg = ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#0a0612'); bg.addColorStop(1,'#1a0a2e');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  // 金色邊框
+  ctx.strokeStyle='rgba(201,168,76,0.4)';
+  ctx.lineWidth=2;
+  ctx.strokeRect(24,24,W-48,H-48);
+  ctx.strokeStyle='rgba(201,168,76,0.15)';
+  ctx.lineWidth=1;
+  ctx.strokeRect(32,32,W-64,H-64);
+
+  // 標題
+  ctx.fillStyle='#c9a84c';
+  ctx.font='bold 18px serif';
+  ctx.textAlign='center';
+  ctx.fillText('✦ 塔羅秘境 ARCANA ✦', W/2, 72);
+
+  // 日期
+  ctx.fillStyle='rgba(201,168,76,0.5)';
+  ctx.font='14px serif';
+  ctx.fillText(date, W/2, 98);
+
+  // 牌卡名稱
+  ctx.fillStyle='#e8d5a0';
+  ctx.font='20px serif';
+  ctx.fillText(cardNames, W/2, 140);
+
+  // 分隔線
+  ctx.strokeStyle='rgba(201,168,76,0.3)';
+  ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(80,158); ctx.lineTo(W-80,158); ctx.stroke();
+
+  // 解讀文字
+  ctx.fillStyle='rgba(232,213,160,0.85)';
+  ctx.font='16px serif';
+  ctx.textAlign='left';
+  let y=190;
+  lines.forEach(line=>{
+    // 自動換行
+    const words=line.replace(/\*\*/g,'');
+    const maxW=W-120;
+    let cur='';
+    for(const ch of words){
+      const test=cur+ch;
+      if(ctx.measureText(test).width>maxW && cur){
+        ctx.fillText(cur,60,y); y+=26; cur=ch;
+      } else cur=test;
+    }
+    if(cur){ ctx.fillText(cur,60,y); y+=30; }
+    if(y>H-120) return;
+  });
+
+  // 底部
+  ctx.fillStyle='rgba(201,168,76,0.35)';
+  ctx.font='13px serif';
+  ctx.textAlign='center';
+  ctx.fillText('kftseng2oo1.github.io/tarot', W/2, H-52);
+
+  // 轉為圖片並分享
+  canvas.toBlob(blob=>{
+    const url=URL.createObjectURL(blob);
+    if(navigator.share && navigator.canShare && navigator.canShare({files:[new File([blob],'tarot.png',{type:'image/png'})]})){
+      navigator.share({
+        title:'塔羅秘境 · 占卜結果',
+        text: cardNames+'\n\n'+lines[0],
+        files:[new File([blob],'tarot-reading.png',{type:'image/png'})]
+      }).catch(()=>{});
+    } else {
+      // 降級：直接下載
+      const a=document.createElement('a');
+      a.href=url; a.download='tarot-reading.png'; a.click();
+    }
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+  },'image/png');
 }
 
 // ── 每日一牌深度解析面板（單牌版本）─────────────────────────────
@@ -3952,6 +4479,15 @@ window.onerror = function(msg, src, line, col, err) {
 
 try { initDaily(); } catch(e) { console.error('initDaily error:', e); }
 try { renderLib(); } catch(e) { console.error('renderLib error:', e); }
+try { initStyleBtns(); } catch(e) { console.error('initStyleBtns error:', e); }
+try { updateNotifBtn(); } catch(e) { console.error('updateNotifBtn error:', e); }
+// 如果已開啟通知，重新設定定時器
+if (S.notifEnabled && 'Notification' in window && Notification.permission === 'granted') {
+  const now = new Date(), next = new Date();
+  next.setHours(8,0,0,0);
+  if (now.getHours() >= 8) next.setDate(next.getDate()+1);
+  setTimeout(() => { sendDailyNotif(); setInterval(sendDailyNotif, 24*60*60*1000); }, next - now);
+}
 
 // 確保按鈕狀態正確
 document.addEventListener('DOMContentLoaded', function() {
