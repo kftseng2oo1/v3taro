@@ -1,44 +1,17 @@
-# AI TAROT
+# 塔羅秘境 · Arcana v3（AI 易經塔羅）
 
-> 一個 Progressive Web App
+AI 塔羅占卜：每日一牌、多種牌陣、深度分析、占卜日誌與牌義辭典。
 
-## 📦 包含檔案
+**線上使用**：https://kftseng2oo1.github.io/v3taro/
 
-- `icon-192.png`
-- `icon-512.png`
-- `manifest.json`
-- `sw.js`
-- `index.html`
-- `icon.svg`
-- `icon-maskable.svg`
-- `offline.html`
+## 說明
+與 [tarot](https://github.com/kftseng2oo1/tarot) 幾乎是同一個 App（tarot 版多了一個文字格式化函式，約多 2 KB），差別主要在 App 名稱（這裡叫「AI易經塔羅」）。功能說明請見 tarot 的 README；建議擇一保留。
 
-## 🚀 部署到 GitHub Pages
+## 主要功能
+- 每日一牌、牌陣占卜（9 種問題類別，自動判斷）、✦ 深度分析（元素、星體、月相、節氣）
+- 解讀風格：詩意、心理、直白；語音朗讀
+- 占卜日誌、牌義辭典、每日提醒
 
-```bash
-git init
-git add .
-git commit -m "init: AI TAROT PWA"
-git branch -M main
-git remote add origin https://github.com/<username>/<repo>.git
-git push -u origin main
-```
-
-然後在 GitHub repo → **Settings → Pages** → Source 選 `main` 分支，等待幾分鐘後即可訪問。
-
-## 📱 安裝 PWA
-
-在支援的瀏覽器（Chrome / Edge / Safari iOS）中打開網頁，  
-點擊「**安裝**」或「**加入主畫面**」即可將此 App 安裝到裝置。
-
-## ⚙ 技術規格
-
-| 項目 | 值 |
-|------|-----|
-| display | standalone |
-| theme_color | #1a73e8 |
-| lang | zh-TW |
-| scope | /v3taro/ |
-
----
-*由 [PWA 打包神器](https://github.com) 自動生成*
+## 技術與依賴
+- 單檔 HTML PWA（`index.html` 內含全部 HTML/CSS/JS），`manifest.json` + `sw.js` 提供安裝到主畫面與離線快取。
+- AI 經 `arcar.kftseng2oo1.workers.dev` 代理
